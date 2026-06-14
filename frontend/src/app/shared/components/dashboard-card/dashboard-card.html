@@ -1,0 +1,13 @@
+<div
+  [class]="padding"
+  [class.data-card]="!glass"
+  [class.glass-card]="glass"
+  [class.rounded-xl]="true"
+  [class.border-l-2]="accentBorder !== 'none'"
+  [class.border-l-primary]="accentBorder === 'primary'"
+  [class.border-l-secondary]="accentBorder === 'secondary'"
+  [class.border-l-tertiary]="accentBorder === 'tertiary'"
+  class="tap-feedback"
+>
+  <ng-content />
+</div>

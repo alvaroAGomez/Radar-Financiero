@@ -1,0 +1,63 @@
+<div class="h-full flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <div class="flex items-center gap-2 flex-shrink-0">
+    <h2 class="section-label flex items-center gap-2 mb-0">
+      <span class="material-symbols-outlined text-secondary text-lg">account_balance</span>
+      Tasas de Cauciones (ARS)
+      <span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded-full font-bold">1D</span>
+      <!-- Tooltip Cauciones -->
+      <span class="iol-tooltip-wrapper relative group inline-flex items-center">
+        <span
+          class="material-symbols-outlined text-outline/40 text-[14px] cursor-default select-none hover:text-outline/70 transition-colors"
+          style="font-variation-settings: 'FILL' 0; font-size: 14px;">
+          info
+        </span>
+        <div class="iol-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50
+                    w-64 px-3 py-2 rounded-lg shadow-lg pointer-events-none
+                    opacity-0 group-hover:opacity-100
+                    translate-y-1 group-hover:translate-y-0
+                    transition-all duration-200 ease-out">
+          <p class="text-[10px] leading-relaxed text-on-surface-variant text-left font-normal normal-case">
+            Tasas de cauciones obtenidas mediante scraping de datos del mercado de <span
+              class="font-bold text-primary">InvertirOnline (IOL)</span>.
+          </p>
+        </div>
+      </span>
+    </h2>
+  </div>
+
+  @if (isLoading() && !cauciones()) {
+  <div class="data-card p-3 rounded-xl flex-grow">
+    <app-loading-skeleton [rows]="['100%']" />
+  </div>
+  }
+
+  @if (cauciones()) {
+  <div
+    class="data-card p-3 rounded-xl flex-grow grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-between text-center md:text-left">
+    <div>
+      <p class="text-[9px] text-on-surface font-label uppercase tracking-wider">Mínima</p>
+      <p class="text-sm font-headline font-bold text-on-background">
+        {{ cauciones()!.min | number:'1.1-1' }}%
+      </p>
+    </div>
+    <div class="border-t sm:border-t-0 sm:border-l border-outline-variant/10 pt-2 sm:pt-0 sm:pl-4">
+      <p class="text-[9px] text-on-surface font-label uppercase tracking-wider">Promedio</p>
+      <p class="text-sm font-headline font-bold text-on-background">
+        {{ cauciones()!.avg | number:'1.1-1' }}%
+      </p>
+    </div>
+    <div class="border-t sm:border-t-0 sm:border-l border-outline-variant/10 pt-2 sm:pt-0 sm:pl-4">
+      <p class="text-[9px] text-on-surface font-label uppercase tracking-wider font-bold">Máxima</p>
+      <p class="text-sm font-headline font-bold text-secondary">
+        {{ cauciones()!.max | number:'1.1-1' }}% 🔥
+      </p>
+    </div>
+    <div class="border-t sm:border-t-0 sm:border-l border-outline-variant/10 pt-2 sm:pt-0 sm:pl-4">
+      <p class="text-[9px] text-on-surface font-label uppercase tracking-wider">Último cierre</p>
+      <p class="text-sm font-headline font-bold text-on-background">
+        {{ cauciones()!.lastClose | number:'1.1-1' }}%
+      </p>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,39 @@
+<div>
+  <h2 class="section-label flex items-center gap-2 mb-4">
+    <span class="material-symbols-filled text-primary text-lg">radar</span>
+    Radar de Oportunidades
+  </h2>
+
+  @if (isLoading() && radarData().length === 0) {
+    <div class="space-y-3">
+      @for (i of [1,2,3]; track i) {
+        <div class="data-card p-4 rounded-xl">
+          <app-loading-skeleton [rows]="['30%', '100%', '80%']" />
+        </div>
+      }
+    </div>
+  }
+
+  @if (radarData().length > 0) {
+    <div class="space-y-3">
+      @for (item of radarData(); track item.id) {
+        <div class="flex gap-4 p-4 bg-surface-container-lowest rounded-xl border-l-4 tap-feedback hover:bg-surface-container-low transition-colors" [ngClass]="getAccentClass(item.tipo)">
+          <!-- Icon -->
+          <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-lg" [ngClass]="getBgClass(item.tipo)">
+            {{ item.icon }}
+          </div>
+          
+          <!-- Content -->
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-1">
+              <span class="text-[10px] font-bold uppercase tracking-widest">{{ item.tipo }}</span>
+              <span class="text-[10px] text-outline font-medium">{{ item.timestamp | relativeTime }}</span>
+            </div>
+            <p class="text-xs font-headline font-bold text-on-surface mb-0.5">{{ item.titulo }}</p>
+            <p class="text-[11px] leading-relaxed text-on-surface-variant">{{ item.descripcion }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,41 @@
+# ─── Node ───────────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ─── Compilados ──────────────────────────────────────────────────────────────
+dist/
+build/
+
+# ─── Variables de entorno / Secretos ─────────────────────────────────────────
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+*.env
+
+# ─── IDEs y Editores ─────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.history/
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ─── Tests ───────────────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+logs/
+*.log

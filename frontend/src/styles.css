@@ -1,0 +1,219 @@
+/* ============================================
+   RADAR FINANCIERO — Global Styles
+   The Sovereign Financial Experience
+   ============================================ */
+
+/* --- Google Fonts Fallback --- */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Base Reset & Body --- */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: #0b1326;
+    color: #dae2fd;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+  }
+
+  /* Material Symbols config */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+    user-select: none;
+  }
+
+  .material-symbols-filled {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+/* --- Component Classes (design primitives) --- */
+@layer components {
+
+  /* Card base — Level 2 surface */
+  .data-card {
+    background: #131b2e;
+    border: 1px solid rgba(69, 70, 77, 0.3);
+    transition: all 0.2s ease;
+  }
+  .data-card:hover {
+    border-color: rgba(173, 198, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(6, 14, 32, 0.4);
+  }
+
+  /* Glassmorphism — floating elements */
+  .glass-card {
+    background: rgba(45, 52, 73, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(69, 70, 77, 0.15);
+  }
+
+  /* Ghost border (accessibility fallback) */
+  .ghost-border {
+    border: 1px solid rgba(69, 70, 77, 0.15);
+  }
+
+  /* Section header label */
+  .section-label {
+    @apply text-[10px] font-label font-bold uppercase tracking-widest text-on-surface-variant;
+    letter-spacing: 0.1em;
+  }
+
+  /* Value large — Manrope hero numbers */
+  .value-hero {
+    @apply font-headline font-bold text-on-background;
+  }
+
+  /* Trend badge positive */
+  .trend-up {
+    @apply text-secondary bg-secondary/10 rounded-full px-2 py-0.5 text-[10px] font-bold;
+  }
+
+  /* Trend badge negative */
+  .trend-down {
+    @apply text-tertiary bg-tertiary/10 rounded-full px-2 py-0.5 text-[10px] font-bold;
+  }
+
+  /* Trend neutral */
+  .trend-neutral {
+    @apply text-on-surface-variant bg-surface-bright/50 rounded-full px-2 py-0.5 text-[10px] font-bold;
+  }
+
+  /* Tap feedback (mobile micro-interaction) */
+  .tap-feedback {
+    transition: transform 0.1s ease;
+    cursor: pointer;
+  }
+  .tap-feedback:active {
+    transform: scale(0.97);
+  }
+
+  /* Hide scrollbar (horizontal sliders) */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Atmospheric pulse for alerts */
+  .alert-pulse {
+    animation: atmosphericPulse 3s ease-in-out infinite;
+  }
+
+  /* Skeleton loader */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #171f33 25%,
+      #222a3d 50%,
+      #171f33 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    border-radius: 0.375rem;
+  }
+
+  /* Data flash — cuando llegan datos nuevos */
+  .data-flash {
+    animation: flashUpdate 0.5s ease-in-out;
+  }
+
+  /* IOL Tooltip — ícono (i) con popover elegante */
+  .iol-tooltip-wrapper {
+    line-height: 1;
+  }
+  .iol-tooltip {
+    background: #1a2340;
+    border: 1px solid rgba(173, 198, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(173, 198, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    white-space: normal;
+  }
+
+  /* ETF change badge */
+  .etf-change-badge {
+    font-family: 'Manrope', sans-serif;
+  }
+  .etf-change-badge.positive {
+    color: #4edea3;
+    background: rgba(78, 222, 163, 0.1);
+    border: 1px solid rgba(78, 222, 163, 0.2);
+  }
+  .etf-change-badge.negative {
+    color: #ff8a80;
+    background: rgba(255, 138, 128, 0.1);
+    border: 1px solid rgba(255, 138, 128, 0.2);
+  }
+
+  /* Custom scrollbar for dropdowns */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(173, 198, 255, 0.2);
+    border-radius: 2px;
+  }
+}
+
+/* --- Utility overrides --- */
+@layer utilities {
+  .font-headline {
+    font-family: 'Manrope', sans-serif;
+  }
+  .font-display {
+    font-family: 'Manrope', sans-serif;
+  }
+}
+
+/* --- Keyframes --- */
+@keyframes atmosphericPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.75; }
+}
+
+@keyframes skeletonShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes flashUpdate {
+  0%, 100% { opacity: 1; }
+  40%       { opacity: 0.3; }
+}
+
+/* --- Ionic overrides (ensure dark theme consistency) --- */
+:root {
+  --ion-background-color: #0b1326;
+  --ion-text-color: #dae2fd;
+  --ion-font-family: 'Inter', sans-serif;
+  --ion-color-primary: #adc6ff;
+  --ion-color-secondary: #4edea3;
+  --ion-color-danger: #ffb3ad;
+  --ion-toolbar-background: #131b2e;
+  --ion-tab-bar-background: #131b2e;
+  --ion-tab-bar-border-color: rgba(69, 70, 77, 0.15);
+  --ion-safe-area-bottom: env(safe-area-inset-bottom);
+}

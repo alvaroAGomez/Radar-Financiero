@@ -1,0 +1,178 @@
+<div class="flex flex-col h-full justify-between">
+  <div>
+    <!-- Nivel Superior: Título Solo -->
+    <h2
+      class="text-sm font-headline font-bold uppercase tracking-widest text-on-surface-variant flex items-center gap-2 mb-3">
+      <span class="material-symbols-outlined text-primary text-lg">currency_bitcoin</span>
+      Crypto Assets
+    </h2>
+
+    <!-- Nivel de Controles: Fila horizontal entre Chips y Buscador -->
+    <div class="flex flex-row items-center justify-between w-full gap-4 mb-4">
+
+      <!-- Chips a la izquierda -->
+      <div class="flex flex-wrap gap-1.5 items-center flex-grow">
+        @for (id of selectedIds(); track id) {
+        <div (click)="toggleCrypto(id)"
+          class="bg-surface-container-low pt-1 pb-1 pl-2 pr-0.5 py-0.5 rounded text-[10px] font-bold flex items-center justify-between border border-outline-variant/10 cursor-pointer hover:bg-surface-container-low transition-all tap-feedback">
+          <span class="text-on-surface uppercase mr-1 leading-none">{{ getCryptoLabel(id) }}</span>
+          <span
+            class="material-symbols-outlined text-[10px] text-red-400/80 hover:text-red-400 cursor-pointer transition-colors leading-none"
+            style="font-variation-settings: 'FILL' 0; font-size: 10px; font-weight: bold; display: inline-block;">close</span>
+        </div>
+        }
+        @if (selectedIds().length === 0) {
+        <span class="text-[9px] text-outline italic">No hay seleccionados.</span>
+        }
+      </div>
+
+      <!-- Buscador a la derecha -->
+      <div class="relative z-20 w-48 sm:w-56 flex-shrink-0">
+        <span
+          class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface text-xs">search</span>
+        <input type="text" [placeholder]="'Buscar cripto (' + selectedIds().length + '/4 máx)'"
+          class="bg-surface-container-low border  border-outline-variant/20 rounded-md text-[9px] py-1 pl-7 pr-3 w-full focus:ring-1 focus:ring-primary focus:border-primary "
+          [value]="searchQuery()" (input)="onSearchInput($event)"
+          (focus)="searchQuery().trim().length > 0 ? showDropdown.set(true) : null" (blur)="hideDropdown()" />
+
+        <!-- Dropdown Suggestions -->
+        @if (showDropdown() && (suggestions().length > 0 || isSearching())) {
+        <div
+          class="absolute right-0 top-full mt-1 w-full bg-surface-container-high border border-outline-variant/20 rounded-md shadow-card overflow-hidden">
+          @if (isSearching()) {
+          <div class="p-3 text-center">
+            <div class="inline-block w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin">
+            </div>
+          </div>
+          } @else {
+          <div class="max-h-48 overflow-y-auto custom-scrollbar">
+            @for (coin of suggestions(); track coin.id) {
+            <button (click)="toggleCrypto(coin.id)"
+              class="w-full text-left p-2 hover:bg-surface-container-highest flex items-center justify-between border-b border-outline-variant/10 last:border-0 transition-colors">
+              <div class="flex items-center gap-2">
+                @if (coin.image) {
+                <img [src]="coin.image" class="w-4 h-4 rounded-full" />
+                } @else {
+                <span class="material-symbols-outlined text-sm text-outline">token</span>
+                }
+                <span class="text-[9px] font-bold text-on-surface">{{ coin.name }}</span>
+              </div>
+
+              <!-- Checkmark if selected -->
+              @if (selectedIds().includes(coin.id)) {
+              <span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+              } @else if (selectedIds().length >= 4) {
+              <span class="material-symbols-outlined text-outline/50 text-sm">block</span>
+              }
+            </button>
+            }
+          </div>
+          }
+        </div>
+        }
+      </div>
+
+    </div>
+  </div>
+
+  @if (isLoading() && (!cryptoData() || cryptoData()!.cryptos.length === 0)) {
+  <div class="grid grid-cols-2 gap-3 flex-grow">
+    @for (i of [1,2,3,4]; track i) {
+    <div class="data-card p-3 rounded-xl h-[92px]">
+      <app-loading-skeleton [rows]="['30%', '50%']" />
+    </div>
+    }
+  </div>
+  }
+
+  @if (cryptoData()) {
+  <div class="grid grid-cols-2 gap-3 flex-grow items-stretch">
+    @if (selectedIds().length === 0) {
+    <div
+      class="col-span-2 data-card rounded-xl p-6 flex flex-col items-center justify-center gap-3 text-center min-h-[200px] flex-grow">
+      <span class="material-symbols-outlined text-4xl text-outline/40">search_off</span>
+      <div>
+        <p class="text-sm font-bold text-on-surface-variant">No hay activos seleccionados</p>
+        <p class="text-[11px] text-outline mt-1">Utilizá el buscador de arriba a la derecha para seleccionar hasta 4
+          criptomonedas y seguir sus precios en vivo.</p>
+      </div>
+    </div>
+    }
+    @for (crypto of filteredCryptos(); track crypto.id) {
+    <!-- Web Layout -->
+    <div
+      class="hidden md:flex data-card p-4 rounded-xl items-center justify-between tap-feedback relative overflow-hidden z-10 min-h-[92px] h-full flex-grow">
+
+      <!-- Absolute Background Sparkline -->
+      <div class="absolute bottom-0 left-0 right-0 h-1/2 opacity-15 pointer-events-none -z-10"
+        style="mask-image: linear-gradient(to bottom, transparent, black 80%); -webkit-mask-image: linear-gradient(to bottom, transparent, black 80%);">
+        @if (crypto.sparkline?.length) {
+        <svg viewBox="0 0 100 40" class="w-full h-full" preserveAspectRatio="none">
+          <polyline [attr.points]="getSparklinePoints(crypto.sparkline, 100, 40)" fill="none"
+            [attr.stroke]="crypto.change24h >= 0 ? '#26A69A' : '#F23645'" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        }
+      </div>
+
+      <div class="flex items-center gap-3 drop-shadow-md">
+        <div
+          class="w-8 h-8 rounded-full bg-surface flex items-center justify-center border border-outline-variant/20 shadow-sm">
+          <span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">
+            {{ crypto.icon || 'token' }}
+          </span>
+        </div>
+        <div class="bg-surface-container-low/60 px-2 py-0.5 rounded backdrop-blur-sm">
+          <p class="text-xs font-bold text-on-surface truncate max-w-[110px] leading-tight">{{ crypto.name }}</p>
+          <p class="text-[10px] text-on-surface-variant font-bold leading-tight">{{ crypto.symbol }}</p>
+        </div>
+      </div>
+
+      <div class="text-right bg-surface-container-low/60 px-2 py-0.5 rounded backdrop-blur-sm drop-shadow-md">
+        <p class="text-sm font-headline font-bold text-on-surface leading-tight">
+          {{ crypto.priceUsd | currencyFormatter:'USD':(crypto.priceUsd < 1 ? 4 : 2) }} </p>
+            <div class="mt-0.5 flex justify-end">
+              <app-trend-indicator [value]="crypto.change24h" />
+            </div>
+      </div>
+    </div>
+
+    <!-- Mobile Layout -->
+    <div
+      class="flex md:hidden bg-surface-container-low p-3 rounded-xl border border-outline-variant/10 relative overflow-hidden tap-feedback">
+      <div class="absolute -right-2 -bottom-2 text-surface-bright/20 pointer-events-none">
+        <span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">
+          {{ crypto.icon || 'token' }}
+        </span>
+      </div>
+
+      <div class="relative z-10 flex flex-col h-full justify-between w-full">
+        <div class="flex justify-between items-start">
+          <span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest truncate max-w-[70px]">{{
+            crypto.symbol }}</span>
+        </div>
+
+        <!-- Mobile Sparkline -->
+        <div class="absolute inset-0 opacity-15 pointer-events-none mt-4">
+          @if (crypto.sparkline?.length) {
+          <svg viewBox="0 0 100 40" class="w-full h-full" preserveAspectRatio="none">
+            <polyline [attr.points]="getSparklinePoints(crypto.sparkline, 100, 40)" fill="none"
+              [attr.stroke]="crypto.change24h >= 0 ? '#26A69A' : '#F23645'" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          }
+        </div>
+
+        <div class="mt-1">
+          <div class="text-sm font-headline font-bold text-on-background">
+            {{ crypto.priceUsd | currencyFormatter:'USD':(crypto.priceUsd < 1 ? 4 : 2) }} </div>
+              <div class="mt-0.5">
+                <app-trend-indicator [value]="crypto.change24h" />
+              </div>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
