@@ -33,7 +33,6 @@ export class MarketScraperProvider {
       );
 
       const d = response.data;
-
       // El bot devuelve un objeto único con estadísticas del día, no un array.
       // Estructura esperada: { fecha, tasa_minima, tasa_maxima: { valor, hora }, promedio, ultima_tasa: { valor, hora } }
       if (d && typeof d === 'object' && !Array.isArray(d) && d.promedio !== undefined) {

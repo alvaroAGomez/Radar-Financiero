@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { environment } from '../../../../../environments/environment';
+import { AppConfigService } from '../../../../core/services/app-config.service';
 
 @Component({
   selector: 'app-herramientas-panel',
@@ -10,7 +9,24 @@ import { environment } from '../../../../../environments/environment';
   templateUrl: './herramientas-panel.html',
   styleUrl: './herramientas-panel.css',
 })
-export class HerramientasPanel {
-  readonly botCaucionesUrl = environment.botCaucionesUrl;
-  readonly botDividendosUrl = environment.botDividendosUrl;
+export class HerramientasPanel implements OnInit {
+  botCaucionesUrl = '';
+  botDividendosUrl = '';
+  isLoadingConfig = true;
+
+  constructor(private readonly appConfigService: AppConfigService) {}
+
+  ngOnInit(): void {
+    this.appConfigService.loadConfig().subscribe({
+      next: (config) => {
+        this.botCaucionesUrl = config.botCaucionesUrl;
+        this.botDividendosUrl = config.botDividendosUrl;
+        this.isLoadingConfig = false;
+      },
+      error: (err) => {
+        console.error('[HerramientasPanel] Error inesperado al cargar config:', err);
+        this.isLoadingConfig = false;
+      },
+    });
+  }
 }

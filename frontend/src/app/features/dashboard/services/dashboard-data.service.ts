@@ -6,7 +6,7 @@ import { DolarPayload } from '../../../shared/models/dolar.model';
 import { CryptoPayload } from '../../../shared/models/crypto.model';
 import { CaucionesData, MarketData, RadarOpportunity, MarketAsset } from '../../../shared/models/market.model';
 
-const POLL_INTERVAL_MS = 120_000; // 2 minutos
+const POLL_INTERVAL_MS = 240_000; // 4 minutos
 const RETRY_DELAY_MS   = 5_000;   // 5 segundos
 
 @Injectable({

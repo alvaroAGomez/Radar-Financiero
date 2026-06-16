@@ -23,14 +23,14 @@ module.exports = {
         'on-background':              '#D1D4DC',
         
         // Primary — Sleek Accent
-        'primary':                    '#2962FF',
-        'on-primary':                 '#FFFFFF',
-        'primary-container':          '#003E9C',
-        'on-primary-container':       '#D4E2FF',
-        'primary-fixed':              '#D4E2FF',
-        'primary-fixed-dim':          '#2962FF',
-        'on-primary-fixed':           '#001C3A',
-        'on-primary-fixed-variant':   '#0042A6',
+        'primary':                    '#6d9ec7ff', 
+        'on-primary':                 '#0D324D',
+        'primary-container':          '#1E4765',
+        'on-primary-container':       '#E3F2FD',
+        'primary-fixed':              '#E3F2FD',
+        'primary-fixed-dim':          '#90CAF9',
+        'on-primary-fixed':           '#001E33',
+        'on-primary-fixed-variant':   '#2A5C82',
         
         // Secondary — Positive / Growth (TradingView Green)
         'secondary':                  '#26A69A',
@@ -63,12 +63,12 @@ module.exports = {
         'on-error-container':         '#FFDAD8',
         
         // Inverse
-        'inverse-surface':            '#D1D4DC',
-        'inverse-on-surface':         '#131722',
-        'inverse-primary':            '#2962FF',
+        'inverse-surface':            '#E9ECF0',
+        'inverse-on-surface':         '#10141A',
+        'inverse-primary':            '#90CAF9',
         
         // Surface tint
-        'surface-tint':               '#2A2E39',
+        'surface-tint':               '#27303F',
       },
       fontFamily: {
         headline: ['Inter', 'sans-serif'],
