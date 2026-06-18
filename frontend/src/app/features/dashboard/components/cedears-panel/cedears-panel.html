@@ -4,8 +4,9 @@
     Mercado USA / CEDEARs
     <!-- Tooltip IOL -->
     <span class="iol-tooltip-wrapper ml-1 relative group inline-flex items-center">
-      <span class="material-symbols-outlined text-outline/40 text-[14px] cursor-default select-none hover:text-outline/70 transition-colors"
-            style="font-variation-settings: 'FILL' 0; font-size: 14px;">
+      <span
+        class="material-symbols-outlined text-outline/40 text-[14px] cursor-default select-none hover:text-outline/70 transition-colors"
+        style="font-variation-settings: 'FILL' 0; font-size: 14px;">
         info
       </span>
       <div class="iol-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50
@@ -13,7 +14,7 @@
                   opacity-0 group-hover:opacity-100
                   translate-y-1 group-hover:translate-y-0
                   transition-all duration-200 ease-out">
-        <p class="text-[10px] leading-relaxed text-on-surface-variant">
+        <p class="text-[10px] leading-relaxed text-on-surface-variant text-left normal-case">
           Cotizaciones en tiempo real provistas por la API de
           <span class="font-bold text-primary">InvertirOnline (IOL)</span>.
           Datos filtrados por volumen operativo local.
@@ -23,76 +24,82 @@
   </h2>
 
   @if (isLoading() && !market()) {
-    <div class="data-card rounded-xl overflow-hidden">
-      <div class="p-5"><app-loading-skeleton [rows]="['60%', '40%', '70%', '50%', '65%', '45%']" /></div>
-    </div>
+  <div class="data-card rounded-xl overflow-hidden">
+    <div class="p-5"><app-loading-skeleton [rows]="['60%', '40%', '70%', '50%', '65%', '45%']" /></div>
+  </div>
   }
 
   @if (!isLoading() && (marketError() || (!market()?.topGainers?.length && !market()?.topLosers?.length))) {
-    <div class="data-card rounded-xl p-6 flex flex-col items-center justify-center gap-3 text-center min-h-[200px]">
-      <span class="material-symbols-outlined text-4xl text-outline/40" style="font-variation-settings: 'FILL' 0;">signal_disconnected</span>
-      <div>
-        <p class="text-sm font-bold text-on-surface-variant">Sin datos disponibles</p>
-        <p class="text-[11px] text-outline mt-1 max-w-[200px]">No se pudo obtener cotizaciones de CEDEARs.<br>Se reintentará automáticamente.</p>
-      </div>
+  <div class="data-card rounded-xl p-6 flex flex-col items-center justify-center gap-3 text-center min-h-[200px]">
+    <span class="material-symbols-outlined text-4xl text-outline/40"
+      style="font-variation-settings: 'FILL' 0;">signal_disconnected</span>
+    <div>
+      <p class="text-sm font-bold text-on-surface-variant">Sin datos disponibles</p>
+      <p class="text-[11px] text-outline mt-1 max-w-[200px]">No se pudo obtener cotizaciones de CEDEARs.<br>Se
+        reintentará automáticamente.</p>
     </div>
+  </div>
   }
 
   @if (market() && (market()!.topGainers.length || market()!.topLosers.length)) {
-    <div class="data-card rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-outline-variant/10">
-      
-      <!-- Columna Izquierda: Top Subas -->
-      <div class="flex flex-col">
-        <div class="p-3 border-b border-outline-variant/10 bg-surface-container-low/50">
-          <p class="flex items-center gap-1.5 text-[10px] font-bold text-secondary uppercase tracking-widest">
-            <span class="material-symbols-outlined text-base">trending_up</span>
-            Top Subas
-          </p>
-        </div>
-        <div class="p-4 space-y-3 flex-grow">
-          @for (asset of market()!.topGainers; track asset.ticker) {
-            <div class="flex justify-between items-center w-full">
-              <div class="flex flex-col flex-1 min-w-0 pr-2">
-                <span class="text-sm font-bold font-headline truncate" [title]="asset.nombre">
-                  {{ formatCedearName(asset.nombre || asset.ticker) }} 
-                  <span class="text-[10px] bg-surface-bright text-on-surface-variant px-1 rounded font-bold ml-1">{{ asset.ticker }}</span>
-                </span>
-              </div>
-              <div class="flex items-center gap-3 shrink-0">
-                <span class="text-sm font-bold text-on-surface">{{ asset.precio | currencyFormatter:'ARS':2 }}</span>
-                <span class="text-xs text-secondary font-bold w-12 text-right">+{{ asset.variacion | number:'1.1-1' }}%</span>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
+  <div
+    class="data-card rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-outline-variant/10">
 
-      <!-- Columna Derecha: Top Bajas -->
-      <div class="flex flex-col">
-        <div class="p-3 border-b border-outline-variant/10 bg-surface-container-low/50">
-          <p class="flex items-center gap-1.5 text-[10px] font-bold text-tertiary uppercase tracking-widest">
-            <span class="material-symbols-outlined text-base">trending_down</span>
-            Top Bajas
-          </p>
-        </div>
-        <div class="p-4 space-y-3 flex-grow">
-          @for (asset of market()!.topLosers; track asset.ticker) {
-            <div class="flex justify-between items-center w-full">
-              <div class="flex flex-col flex-1 min-w-0 pr-2">
-                <span class="text-sm font-bold font-headline truncate" [title]="asset.nombre">
-                  {{ formatCedearName(asset.nombre || asset.ticker) }} 
-                  <span class="text-[10px] bg-surface-bright text-on-surface-variant px-1 rounded font-bold ml-1">{{ asset.ticker }}</span>
-                </span>
-              </div>
-              <div class="flex items-center gap-3 shrink-0">
-                <span class="text-sm font-bold text-on-surface">{{ asset.precio | currencyFormatter:'ARS':2 }}</span>
-                <span class="text-xs text-tertiary font-bold w-12 text-right">{{ asset.variacion | number:'1.1-1' }}%</span>
-              </div>
-            </div>
-          }
-        </div>
+    <!-- Columna Izquierda: Top Subas -->
+    <div class="flex flex-col">
+      <div class="p-3 border-b border-outline-variant/10 bg-surface-container-low/50">
+        <p class="flex items-center gap-1.5 text-[10px] font-bold text-secondary uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">trending_up</span>
+          Top Subas
+        </p>
       </div>
-
+      <div class="p-4 space-y-3 flex-grow">
+        @for (asset of market()!.topGainers; track asset.ticker) {
+        <div class="flex justify-between items-center w-full">
+          <div class="flex flex-col flex-1 min-w-0 pr-2">
+            <span class="text-sm font-bold font-headline truncate" [title]="asset.nombre">
+              {{ formatCedearName(asset.nombre || asset.ticker) }}
+              <span class="text-[10px] bg-surface-bright text-on-surface-variant px-1 rounded font-bold ml-1">{{
+                asset.ticker }}</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="text-sm font-bold text-on-surface">{{ asset.precio | currencyFormatter:'ARS':2 }}</span>
+            <span class="text-xs text-secondary font-bold w-12 text-right">+{{ asset.variacion | number:'1.1-1'
+              }}%</span>
+          </div>
+        </div>
+        }
+      </div>
     </div>
+
+    <!-- Columna Derecha: Top Bajas -->
+    <div class="flex flex-col">
+      <div class="p-3 border-b border-outline-variant/10 bg-surface-container-low/50">
+        <p class="flex items-center gap-1.5 text-[10px] font-bold text-tertiary uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">trending_down</span>
+          Top Bajas
+        </p>
+      </div>
+      <div class="p-4 space-y-3 flex-grow">
+        @for (asset of market()!.topLosers; track asset.ticker) {
+        <div class="flex justify-between items-center w-full">
+          <div class="flex flex-col flex-1 min-w-0 pr-2">
+            <span class="text-sm font-bold font-headline truncate" [title]="asset.nombre">
+              {{ formatCedearName(asset.nombre || asset.ticker) }}
+              <span class="text-[10px] bg-surface-bright text-on-surface-variant px-1 rounded font-bold ml-1">{{
+                asset.ticker }}</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="text-sm font-bold text-on-surface">{{ asset.precio | currencyFormatter:'ARS':2 }}</span>
+            <span class="text-xs text-tertiary font-bold w-12 text-right">{{ asset.variacion | number:'1.1-1' }}%</span>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+  </div>
   }
 </div>
