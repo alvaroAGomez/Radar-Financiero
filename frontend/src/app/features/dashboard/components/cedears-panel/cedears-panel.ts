@@ -15,9 +15,21 @@ import { CurrencyFormatterPipe } from '../../../../shared/pipes/currency-formatt
 export class CedearsPanel {
   private dataService = inject(DashboardDataService);
 
-  readonly isLoading   = this.dataService.isLoading;
-  readonly market      = this.dataService.market;
-  readonly marketError = this.dataService.marketError;
+  readonly isLoading    = this.dataService.isLoading;
+  readonly market       = this.dataService.market;
+  readonly marketError  = this.dataService.marketError;
+  readonly isMarketOpen = this.dataService.isMarketOpen;
+  readonly marketCachedAt = this.dataService.marketCachedAt;
+
+  formatCachedAt(iso: string | null): string {
+    if (!iso) return '';
+    return new Date(iso).toLocaleTimeString('es-AR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'America/Argentina/Buenos_Aires',
+    });
+  }
 
   formatCedearName(name: string): string {
     if (!name) return '';

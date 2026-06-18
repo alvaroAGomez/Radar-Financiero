@@ -13,7 +13,7 @@ export class MarketController {
   }
 
   @Get('cauciones')
-  async getCauciones(): Promise<CaucionRateDto[]> {
+  async getCauciones(): Promise<{ rates: CaucionRateDto[]; marketOpen: boolean; cachedAt?: string }> {
     return this.marketService.getCauciones();
   }
 }

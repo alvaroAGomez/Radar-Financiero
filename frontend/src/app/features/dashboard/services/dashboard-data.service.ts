@@ -4,10 +4,10 @@ import { ApiService } from '../../../core/services/api.service';
 import { DashboardPayload } from '../../../shared/models/market.model';
 import { DolarPayload } from '../../../shared/models/dolar.model';
 import { CryptoPayload } from '../../../shared/models/crypto.model';
-import { CaucionesData, MarketData, RadarOpportunity, MarketAsset } from '../../../shared/models/market.model';
+import { CaucionesData, MarketData, RadarOpportunity } from '../../../shared/models/market.model';
 
-const POLL_INTERVAL_MS = 240_000; // 4 minutos
-const RETRY_DELAY_MS   = 5_000;   // 5 segundos
+export const POLL_INTERVAL_MS = 240_000; // 4 minutos
+const RETRY_DELAY_MS = 5_000;            // 5 segundos
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +27,13 @@ export class DashboardDataService implements OnDestroy {
   private _market     = signal<MarketData | null>(null);
   private _radar      = signal<RadarOpportunity[]>([]);
 
+  // ─── Market status ─────────────────────────────────────────────────────────
+  private _marketOpen    = signal<boolean>(true);
+  private _marketCachedAt = signal<string | null>(null);
+
+  /** Epoch ms del último poll exitoso — usado para calcular el countdown */
+  private _lastPollEpoch = signal<number>(0);
+
   // ─── Error signals por sección ───────────────────────
   private _dolarError    = signal<boolean>(false);
   private _marketError   = signal<boolean>(false);
@@ -34,19 +41,25 @@ export class DashboardDataService implements OnDestroy {
   private _caucionError  = signal<boolean>(false);
 
   // ─── Signals públicas ─────────────────────────────────────
-  readonly isLoading   = this._isLoading.asReadonly();
-  readonly error       = this._error.asReadonly();
-  readonly isStale     = this._isStale.asReadonly();
-  readonly lastUpdated = this._lastUpdated.asReadonly();
-  readonly dolar       = this._dolar.asReadonly();
-  readonly cryptos     = this._cryptos.asReadonly();
-  readonly cauciones   = this._cauciones.asReadonly();
-  readonly market      = this._market.asReadonly();
-  readonly radar       = this._radar.asReadonly();
+  readonly isLoading    = this._isLoading.asReadonly();
+  readonly error        = this._error.asReadonly();
+  readonly isStale      = this._isStale.asReadonly();
+  readonly lastUpdated  = this._lastUpdated.asReadonly();
+  readonly dolar        = this._dolar.asReadonly();
+  readonly cryptos      = this._cryptos.asReadonly();
+  readonly cauciones    = this._cauciones.asReadonly();
+  readonly market       = this._market.asReadonly();
+  readonly radar        = this._radar.asReadonly();
   readonly dolarError   = this._dolarError.asReadonly();
   readonly marketError  = this._marketError.asReadonly();
   readonly cryptoError  = this._cryptoError.asReadonly();
   readonly caucionError = this._caucionError.asReadonly();
+
+  /** Si el mercado de BYMA/IOL está operativo en este momento */
+  readonly isMarketOpen    = this._marketOpen.asReadonly();
+  readonly marketCachedAt  = this._marketCachedAt.asReadonly();
+  /** Epoch ms del último poll (para calcular countdown en el shell) */
+  readonly lastPollEpoch   = this._lastPollEpoch.asReadonly();
 
   // ─── Estado de la UI compartida ──────────────────────────────────────────
   private _selectedCryptoIds = signal<string[]>(['bitcoin', 'ethereum', 'solana', 'binancecoin']);
@@ -76,20 +89,19 @@ export class DashboardDataService implements OnDestroy {
           this._marketError.set(false);
           this._cryptoError.set(false);
           this._caucionError.set(false);
-          
+
           const selected = this._selectedCryptoIds();
           const ids = selected.join(',');
-          
-          const cryptoReq = selected.length > 0 
+
+          const cryptoReq = selected.length > 0
             ? this.api.get<any[]>('/crypto/prices', { ids }).pipe(catchError(() => { this._cryptoError.set(true); return of([]); }))
             : of([]);
 
-          // Cada endpoint falla de forma independiente para no bloquear el resto del dashboard
           return forkJoin({
             dolarRes:     this.api.get<any>('/dolar').pipe(catchError(() => { this._dolarError.set(true); return of(null); })),
             cryptoRes:    cryptoReq,
             marketRes:    this.api.get<any>('/market/summary').pipe(catchError(() => { this._marketError.set(true); return of(null); })),
-            caucionesRes: this.api.get<any[]>('/market/cauciones').pipe(catchError(() => { this._caucionError.set(true); return of([]); }))
+            caucionesRes: this.api.get<any>('/market/cauciones').pipe(catchError(() => { this._caucionError.set(true); return of(null); }))
           }).pipe(
             map(results => this.mapBackendToFrontend(results)),
             catchError((err) => {
@@ -113,6 +125,8 @@ export class DashboardDataService implements OnDestroy {
             this._lastUpdated.set(data.serverTime);
             this._isStale.set(false);
             this._error.set(null);
+            // Registrar epoch del último poll exitoso
+            this._lastPollEpoch.set(Date.now());
           }
           this._isLoading.set(false);
         },
@@ -124,22 +138,22 @@ export class DashboardDataService implements OnDestroy {
       });
   }
 
-  private mapBackendToFrontend(res: { dolarRes: any, cryptoRes: any[], marketRes: any, caucionesRes: any[] }): DashboardPayload {
+  private mapBackendToFrontend(res: { dolarRes: any; cryptoRes: any[]; marketRes: any; caucionesRes: any }): DashboardPayload {
     // 1. Dolar
     const d = res.dolarRes;
-    const brecha = d?.oficial?.venta && d?.blue?.venta 
-      ? ((d.blue.venta - d.oficial.venta) / d.oficial.venta) * 100 
+    const brecha = d?.oficial?.venta && d?.blue?.venta
+      ? ((d.blue.venta - d.oficial.venta) / d.oficial.venta) * 100
       : 0;
 
     const dolarPayload: DolarPayload | null = d ? {
       rates: {
         oficial: { compra: d.oficial?.compra || 0, venta: d.oficial?.venta || 0, variacion: 0 },
-        blue: { compra: d.blue?.compra || 0, venta: d.blue?.venta || 0, variacion: 0 },
-        mep: { compra: d.mep?.compra || 0, venta: d.mep?.venta || 0, variacion: 0 },
-        ccl: { compra: d.ccl?.compra || 0, venta: d.ccl?.venta || 0, variacion: 0 },
+        blue:    { compra: d.blue?.compra    || 0, venta: d.blue?.venta    || 0, variacion: 0 },
+        mep:     { compra: d.mep?.compra     || 0, venta: d.mep?.venta     || 0, variacion: 0 },
+        ccl:     { compra: d.ccl?.compra     || 0, venta: d.ccl?.venta     || 0, variacion: 0 },
         tarjeta: { compra: d.tarjeta?.compra || 0, venta: d.tarjeta?.venta || 0, variacion: 0 }
       },
-      brecha: brecha,
+      brecha,
       ultimaActualizacion: d.lastUpdated || new Date().toISOString(),
       isStale: d.stale || false
     } : null;
@@ -158,8 +172,15 @@ export class DashboardDataService implements OnDestroy {
       ultimaActualizacion: new Date().toISOString()
     };
 
-    // 3. Market
+    // 3. Market — el backend ahora retorna { gainers, losers, etfs, marketOpen, cachedAt }
     const m = res.marketRes;
+    const marketOpen = m?.marketOpen ?? true;
+    const marketCachedAt = m?.cachedAt ?? null;
+
+    // Actualizar señal de estado del mercado (basado en la respuesta de market/summary)
+    this._marketOpen.set(marketOpen);
+    if (marketCachedAt) this._marketCachedAt.set(marketCachedAt);
+
     const marketPayload: MarketData | null = m ? {
       topGainers: (m.gainers || []).map((g: any) => ({
         ticker: g.symbol,
@@ -184,10 +205,16 @@ export class DashboardDataService implements OnDestroy {
       }))
     } : null;
 
-    // 4. Cauciones — El bot retorna [min, prom, max, last], usamos los tenores semánticos
-    const lastRate = res.caucionesRes.find((c: any) => c.tenor === 'last') ?? res.caucionesRes[res.caucionesRes.length - 1];
-    const promRate = res.caucionesRes.find((c: any) => c.tenor === 'prom');
-    const rates    = res.caucionesRes.map((c: any) => c.tasa);
+    // 4. Cauciones — el backend ahora retorna { rates: [], marketOpen: bool, cachedAt?: string }
+    const caucionesRaw = res.caucionesRes;
+    // Soporte para el nuevo shape { rates, marketOpen } y el shape antiguo (array directo)
+    const caucionesArr: any[] = Array.isArray(caucionesRaw)
+      ? caucionesRaw
+      : (caucionesRaw?.rates ?? []);
+
+    const lastRate = caucionesArr.find((c: any) => c.tenor === 'last') ?? caucionesArr[caucionesArr.length - 1];
+    const promRate = caucionesArr.find((c: any) => c.tenor === 'prom');
+    const rates    = caucionesArr.map((c: any) => c.tasa);
     const caucionesData: CaucionesData = {
       min:       rates.length ? Math.min(...rates) : 0,
       max:       rates.length ? Math.max(...rates) : 0,
@@ -196,7 +223,7 @@ export class DashboardDataService implements OnDestroy {
       plazo:     '1 día'
     };
 
-    // 5. Radar (Mock until backend has an endpoint)
+    // 5. Radar (Mock)
     const radarData: RadarOpportunity[] = [
       { id: '1', tipo: 'caucion', titulo: 'Caución act', descripcion: 'Tasa spot monitoreada.', timestamp: new Date().toISOString(), prioridad: 'alta', icon: '🔥' }
     ];
