@@ -51,7 +51,7 @@ export class DashboardShell implements OnInit, OnDestroy {
       now.toLocaleTimeString('es-AR', {
         hour12: false,
         timeZone: 'America/Argentina/Buenos_Aires',
-      }) + ' ART'
+      }) 
     );
   }
 }

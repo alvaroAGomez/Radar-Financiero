@@ -8,12 +8,13 @@
     <div class="flex items-center gap-2">
       @if (brecha()) {
       <span class="text-[10px] text-on-surface-variant font-label flex items-center gap-1">
-        Brecha 
+        Brecha
         <span class="text-primary font-bold">{{ brecha() | number:'1.1-1' }}%</span>
         <!-- Brecha Tooltip -->
         <span class="iol-tooltip-wrapper relative group inline-flex items-center">
-          <span class="material-symbols-outlined text-outline/40 text-[13px] cursor-default select-none hover:text-outline/70 transition-colors"
-                style="font-variation-settings: 'FILL' 0; font-size: 13px;">
+          <span
+            class="material-symbols-outlined text-outline/40 text-[13px] cursor-default select-none hover:text-outline/70 transition-colors"
+            style="font-variation-settings: 'FILL' 0; font-size: 13px;">
             info
           </span>
           <div class="iol-tooltip absolute right-0 bottom-full mb-2 z-50
@@ -22,31 +23,13 @@
                       translate-y-1 group-hover:translate-y-0
                       transition-all duration-200 ease-out">
             <p class="text-[10px] leading-relaxed text-on-surface-variant text-left normal-case">
-              Brecha cambiaria: diferencia porcentual entre la cotización del <span class="font-bold text-primary">Dólar Oficial de venta</span> y el <span class="font-bold text-primary">Dólar Blue de venta</span>.
+              Brecha cambiaria: diferencia porcentual entre la cotización del <span class="font-bold text-primary">Dólar
+                Oficial de venta</span> y el <span class="font-bold text-primary">Dólar Blue de venta</span>.
             </p>
           </div>
         </span>
       </span>
       }
-      <span class="text-[10px] text-outline font-label uppercase tracking-widest flex items-center gap-1">
-        Real-Time
-        <!-- IOL/Scraper Tooltip for MEP/CCL -->
-        <span class="iol-tooltip-wrapper relative group inline-flex items-center">
-          <span class="material-symbols-outlined text-outline/40 text-[13px] cursor-default select-none hover:text-outline/70 transition-colors"
-                style="font-variation-settings: 'FILL' 0; font-size: 13px;">
-            info
-          </span>
-          <div class="iol-tooltip absolute right-0 bottom-full mb-2 z-50
-                      w-64 px-3 py-2 rounded-lg shadow-lg pointer-events-none
-                      opacity-0 group-hover:opacity-100
-                      translate-y-1 group-hover:translate-y-0
-                      transition-all duration-200 ease-out">
-            <p class="text-[10px] leading-relaxed text-on-surface-variant text-left normal-case">
-              Cotizaciones MEP y CCL obtenidas mediante scraping de datos del mercado local (IOL).
-            </p>
-          </div>
-        </span>
-      </span>
     </div>
   </div>
 
@@ -73,52 +56,71 @@
     </div>
     }
   </div>
-  <p class="text-[10px] text-outline text-center mt-3 italic">No se pudo obtener cotizaciones. Se reintentará automáticamente.</p>
+  <p class="text-[10px] text-outline text-center mt-3 italic">No se pudo obtener cotizaciones. Se reintentará
+    automáticamente.</p>
   }
 
   <!-- Data Display -->
   @if (dolar()) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mt-2 h-full">
-      @for (card of cards; track card.key) {
-        <div class="data-card relative rounded-xl p-2.5 md:p-4 flex flex-col justify-between h-full min-h-[92px] md:min-h-0">
-          
-          <!-- Card Header -->
-          <div class="text-center">
-            <div class="flex items-center justify-center gap-1.5">
-              <span class="text-sm md:text-base leading-none">{{ card.icon }}</span>
-              <h3 class="font-headline font-black text-xs md:text-sm text-on-surface uppercase tracking-wider whitespace-nowrap leading-none">
-                DOLAR {{ card.label }}
-              </h3>
-            </div>
-            <p class="text-[9px] md:text-[10px] text-on-surface-variant mt-0.5 md:mt-1 h-3 leading-none">
-              @if (card.key === 'oficial' || card.key === 'blue') {
-                 Actualizado hoy | Spread: {{ getSpread(dolar()!.rates[card.key]!.venta, dolar()!.rates[card.key]!.compra) | currencyFormatter:'ARS':0 }}
-              } @else {
-                 Actualizado hoy
-              }
-            </p>
-          </div>
-          
-          <hr class="border-outline-variant/10 my-1.5 md:my-3" />
-          
-          <!-- Split Venta / Compra -->
-          <div class="grid grid-cols-2 divide-x divide-outline-variant/20 mt-auto">
-            <div class="text-center pr-1">
-              <p class="text-[8px] md:text-[9px] font-bold text-on-surface-variant uppercase tracking-wider mb-0.5 leading-none">COMPRA</p>
-              <p class="text-sm md:text-base font-black text-on-surface leading-tight">
-                {{ dolar()!.rates[card.key]!.compra | currencyFormatter:'ARS':0 }}
-              </p>
-            </div>
-            <div class="text-center pl-1">
-              <p class="text-[8px] md:text-[9px] font-bold text-on-surface-variant uppercase tracking-wider mb-0.5 leading-none">VENTA</p>
-              <p class="text-sm md:text-base font-black text-secondary leading-tight">
-                {{ dolar()!.rates[card.key]!.venta | currencyFormatter:'ARS':0 }}
-              </p>
-            </div>
-          </div>
-          
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mt-2 h-full">
+    @for (card of cards; track card.key) {
+    <div
+      class="data-card relative rounded-xl p-2.5 md:p-4 flex flex-col justify-between h-full min-h-[92px] md:min-h-0">
+
+      <!-- Card Header -->
+      <div class="text-center">
+        <div class="flex items-center justify-center gap-1.5">
+          <span class="text-sm md:text-base leading-none">{{ card.icon }}</span>
+          <h3
+            class="font-headline font-black text-xs md:text-sm text-on-surface uppercase tracking-wider whitespace-nowrap leading-none">
+            DOLAR {{ card.label }}
+          </h3>
         </div>
+        <p class="text-[9px] md:text-[10px] text-on-surface-variant mt-0.5 md:mt-1 h-3 leading-none">
+          @if (card.key === 'oficial' || card.key === 'blue') {
+          Spread: {{ getSpread(dolar()!.rates[card.key]!.venta, dolar()!.rates[card.key]!.compra) |
+          currencyFormatter:'ARS':0 }}
+          } @else {
+          Actualizado hoy
+          }
+        </p>
+      </div>
+
+      <hr class="border-outline-variant/10 my-1.5 md:my-3" />
+
+      <!-- Split Venta / Compra (o valor único para Tarjeta) -->
+      @if (card.key === 'tarjeta') {
+      <!-- Tarjeta: valor único centrado con label REFERENCIA en lugar de COMPRA/VENTA -->
+      <div class="flex flex-col items-center justify-center mt-auto gap-0.5">
+        <p class="text-[8px] md:text-[9px] font-bold text-on-surface-variant uppercase tracking-wider leading-none">
+          VALOR DE REFERENCIA</p>
+        <p class="text-sm md:text-base font-black text-secondary leading-tight">
+          {{ dolar()!.rates[card.key]!.venta | currencyFormatter:'ARS':0 }}
+        </p>
+      </div>
+      } @else {
+      <div class="grid grid-cols-2 divide-x divide-outline-variant/20 mt-auto">
+        <div class="text-center pr-1">
+          <p
+            class="text-[8px] md:text-[9px] font-bold text-on-surface-variant uppercase tracking-wider mb-0.5 leading-none">
+            COMPRA</p>
+          <p class="text-sm md:text-base font-black text-on-surface leading-tight">
+            {{ dolar()!.rates[card.key]!.compra | currencyFormatter:'ARS':0 }}
+          </p>
+        </div>
+        <div class="text-center pl-1">
+          <p
+            class="text-[8px] md:text-[9px] font-bold text-on-surface-variant uppercase tracking-wider mb-0.5 leading-none">
+            VENTA</p>
+          <p class="text-sm md:text-base font-black text-secondary leading-tight">
+            {{ dolar()!.rates[card.key]!.venta | currencyFormatter:'ARS':0 }}
+          </p>
+        </div>
+      </div>
       }
+
     </div>
+    }
+  </div>
   }
 </div>
