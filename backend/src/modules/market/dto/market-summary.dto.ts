@@ -36,4 +36,10 @@ export class MarketSummaryDto {
 
   @IsString()
   lastUpdated: string;
+
+  @IsBoolean()
+  marketOpen: boolean;
+
+  @IsString()
+  cachedAt?: string; // ISO string de cuándo se guardó el último snapshot
 }

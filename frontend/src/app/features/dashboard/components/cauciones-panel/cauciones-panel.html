@@ -22,6 +22,26 @@
           </p>
         </div>
       </span>
+
+      <!-- Icono: mercado cerrado (datos del último cierre) -->
+      @if (!isMarketOpen()) {
+      <span class="iol-tooltip-wrapper relative group inline-flex items-center ml-1">
+        <span
+          class="material-symbols-outlined text-amber-400 text-[14px] cursor-default select-none hover:text-amber-300 transition-colors"
+          style="font-variation-settings: 'FILL' 0; font-size: 14px;">
+          history
+        </span>
+        <div class="iol-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50
+                    w-48 px-3 py-2 rounded-lg shadow-lg pointer-events-none
+                    opacity-0 group-hover:opacity-100
+                    translate-y-1 group-hover:translate-y-0
+                    transition-all duration-200 ease-out">
+          <p class="text-[10px] leading-relaxed text-on-surface-variant text-center font-normal normal-case">
+            Datos al cierre del mercado @if (marketCachedAt()) { <br/> <span class="font-bold text-amber-400">{{ formatCachedAt(marketCachedAt()) }}</span> }
+          </p>
+        </div>
+      </span>
+      }
     </h2>
   </div>
 
