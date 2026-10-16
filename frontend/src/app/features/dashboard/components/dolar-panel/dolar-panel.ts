@@ -6,9 +6,7 @@ import { CurrencyFormatterPipe } from '../../../../shared/pipes/currency-formatt
 
 interface DolarCard {
   label: string;
-  icon: string;
   key: 'oficial' | 'blue' | 'mep' | 'ccl' | 'tarjeta';
-  accent: boolean;
 }
 
 @Component({
@@ -21,20 +19,28 @@ interface DolarCard {
 export class DolarPanel {
   private dataService = inject(DashboardDataService);
 
-  readonly isLoading  = this.dataService.isLoading;
-  readonly dolar      = this.dataService.dolar;
-  readonly brecha     = this.dataService.dolarBrecha;
+  readonly isLoading = this.dataService.isLoading;
+  readonly dolar = this.dataService.dolar;
+  readonly brecha = this.dataService.dolarBrecha;
   readonly dolarError = this.dataService.dolarError;
 
   readonly cards: DolarCard[] = [
-    { label: 'OFICIAL', icon: '🏛️', key: 'oficial', accent: false },
-    { label: 'BLUE',    icon: '💵', key: 'blue',    accent: true  },
-    { label: 'MEP',     icon: '📈', key: 'mep',     accent: false },
-    { label: 'CCL',     icon: '🌍', key: 'ccl',     accent: false },
-    { label: 'TARJETA', icon: '💳', key: 'tarjeta', accent: false },
+    { label: 'Oficial', key: 'oficial' },
+    { label: 'Blue', key: 'blue' },
+    { label: 'MEP', key: 'mep' },
+    { label: 'CCL', key: 'ccl' },
+    { label: 'Tarjeta', key: 'tarjeta' },
   ];
 
-  getSpread(venta: number, compra: number): number {
-    return (venta || 0) - (compra || 0);
+  formatUpdatedAt(iso: string): string {
+    return (
+      new Date(iso).toLocaleString('es-AR', {
+        timeZone: 'America/Argentina/Buenos_Aires',
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+      }) + ' ART'
+    );
   }
 }

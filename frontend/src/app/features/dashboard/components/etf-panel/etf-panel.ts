@@ -29,33 +29,38 @@ const ETF_META: EtfMeta[] = [
 export class EtfPanel {
   private dataService = inject(DashboardDataService);
 
-  readonly isLoading    = this.dataService.isLoading;
-  readonly market       = this.dataService.market;
-  readonly marketError  = this.dataService.marketError;
+  readonly isLoading = this.dataService.isLoading;
+  readonly market = this.dataService.market;
+  readonly marketError = this.dataService.marketError;
   readonly isMarketOpen = this.dataService.isMarketOpen;
   readonly marketCachedAt = this.dataService.marketCachedAt;
 
   formatCachedAt(iso: string | null): string {
     if (!iso) return '';
-    return new Date(iso).toLocaleTimeString('es-AR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      timeZone: 'America/Argentina/Buenos_Aires',
-    });
+    return (
+      new Date(iso).toLocaleString('es-AR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'America/Argentina/Buenos_Aires',
+      }) + ' ART'
+    );
   }
 
   readonly etfMeta = ETF_META;
 
   getMetaForTicker(ticker: string): EtfMeta | undefined {
-    return ETF_META.find(m => m.ticker === ticker);
+    return ETF_META.find((m) => m.ticker === ticker);
   }
 
   /** Enrich the raw market ETFs array with metadata, preserving display order */
   get enrichedEtfs() {
     const etfsData = this.market()?.etfs ?? [];
-    return ETF_META.map(meta => {
-      const live = etfsData.find(e => e.ticker === meta.ticker);
+    return ETF_META.map((meta) => {
+      const live = etfsData.find((e) => e.ticker === meta.ticker);
       return { ...meta, live };
     });
   }

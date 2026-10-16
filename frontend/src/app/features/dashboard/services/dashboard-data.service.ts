@@ -220,7 +220,8 @@ export class DashboardDataService implements OnDestroy {
       max:       rates.length ? Math.max(...rates) : 0,
       avg:       promRate?.tasa ?? (rates.length ? rates.reduce((a: number, b: number) => a + b, 0) / rates.length : 0),
       lastClose: lastRate?.tasa || 0,
-      plazo:     '1 día'
+      plazo:     '1 día',
+      ultimaActualizacion: caucionesRaw?.cachedAt ?? lastRate?.fecha
     };
 
     // 5. Radar (Mock)

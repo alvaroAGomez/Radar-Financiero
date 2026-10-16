@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, NgZone, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, NgZone, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardDataService, POLL_INTERVAL_MS } from '../../services/dashboard-data.service';
 import { DolarPanel } from '../../components/dolar-panel/dolar-panel';
@@ -27,11 +27,15 @@ export class DashboardShell implements OnInit, OnDestroy {
   private dataService = inject(DashboardDataService);
   private ngZone = inject(NgZone);
 
-  readonly isMarketOpen   = this.dataService.isMarketOpen;
+  readonly year = new Date().getFullYear();
+  readonly marketError = this.dataService.marketError;
+  readonly isLoading = this.dataService.isLoading;
+
+  readonly isMarketOpen = this.dataService.isMarketOpen;
   readonly marketCachedAt = this.dataService.marketCachedAt;
 
-  currentTime    = signal<string>('');
-  nextUpdateIn   = signal<string>(''); // Formato "M:SS"
+  currentTime = signal<string>('');
+  nextUpdateIn = signal<string>(''); // Formato "M:SS"
 
   private timerInt?: any;
 
@@ -54,13 +58,13 @@ export class DashboardShell implements OnInit, OnDestroy {
       now.toLocaleTimeString('es-AR', {
         hour12: false,
         timeZone: 'America/Argentina/Buenos_Aires',
-      })
+      }),
     );
 
     // Countdown próxima actualización
     const lastPoll = this.dataService.lastPollEpoch();
     if (lastPoll > 0) {
-      const elapsed  = Date.now() - lastPoll;
+      const elapsed = Date.now() - lastPoll;
       const remaining = Math.max(0, POLL_INTERVAL_MS - elapsed);
       const mins = Math.floor(remaining / 60_000);
       const secs = Math.floor((remaining % 60_000) / 1000);
@@ -68,14 +72,19 @@ export class DashboardShell implements OnInit, OnDestroy {
     }
   }
 
-  /** Formatea el cachedAt ISO para mostrar "HH:MM" en timezone Argentina */
+  /** Fecha y hora de la fuente en Argentina, incluso para cierres de días anteriores. */
   formatCachedAt(iso: string | null): string {
     if (!iso) return '';
-    return new Date(iso).toLocaleTimeString('es-AR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      timeZone: 'America/Argentina/Buenos_Aires',
-    });
+    return (
+      new Date(iso).toLocaleString('es-AR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'America/Argentina/Buenos_Aires',
+      }) + ' ART'
+    );
   }
 }

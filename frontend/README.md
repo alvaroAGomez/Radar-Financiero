@@ -1,3 +1,7 @@
+## Identidad visual del dashboard
+
+Antes de modificar el dashboard, consultá [VISUAL_IDENTITY.md](VISUAL_IDENTITY.md): tokens, reglas responsive, accesibilidad, datos e instrucciones de prueba.
+
 # RadarFinancieroApp
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.

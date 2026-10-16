@@ -1,0 +1,745 @@
+/* Radar identity. See VISUAL_IDENTITY.md before changing these tokens. */
+.rf-dashboard {
+  --rf-bg: #0b1220;
+  --rf-card: #151f30;
+  --rf-text: #e8eef7;
+  --rf-muted: #a6b3c6;
+  --rf-line: #263246;
+  --rf-blue: #62b5f5;
+  --rf-up: #54d5a2;
+  --rf-down: #ff8092;
+  background: var(--rf-bg);
+  color: var(--rf-text);
+  min-height: 100dvh;
+  font:
+    14px/1.5 Inter,
+    system-ui,
+    sans-serif;
+}
+.rf-dashboard * {
+  box-sizing: border-box;
+}
+.rf-dashboard a {
+  text-decoration: none;
+  color: inherit;
+}
+.rf-dashboard button,
+.rf-dashboard input {
+  font: inherit;
+}
+.rf-dashboard button {
+  cursor: pointer;
+}
+.rf-dashboard :is(a, button, input, summary):focus-visible {
+  outline: 2px solid var(--rf-blue);
+  outline-offset: 4px;
+}
+.rf-dashboard button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.rf-dashboard p {
+  margin: 0;
+}
+.rf-dashboard h1,
+.rf-dashboard h2,
+.rf-dashboard h3 {
+  margin: 0;
+}
+.rf-dashboard section {
+  scroll-margin-top: 20px;
+}
+.rf-dashboard app-etf-panel,
+.rf-dashboard app-cedears-panel {
+  display: block;
+  min-width: 0;
+}
+.rf-wrap {
+  max-width: 1320px;
+  padding: 0 36px;
+  margin: auto;
+}
+.rf-header {
+  border-bottom: 1px solid var(--rf-line);
+  background: #0f1828;
+}
+.rf-header .rf-wrap {
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.rf-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+}
+.rf-brand svg {
+  width: 39px;
+  height: 39px;
+  color: var(--rf-blue);
+  flex: none;
+}
+.rf-brand small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--rf-muted);
+  font-weight: 500;
+}
+.rf-nav {
+  display: flex;
+  gap: 28px;
+  color: var(--rf-muted);
+}
+.rf-nav a {
+  padding: 30px 0;
+}
+.rf-nav a:hover {
+  color: var(--rf-blue);
+}
+.rf-market {
+  font-size: 12px;
+  color: var(--rf-muted);
+}
+.rf-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e4bb70;
+  margin-right: 6px;
+}
+.rf-dot.open {
+  background: var(--rf-blue);
+}
+.rf-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin: 32px 0 26px;
+}
+.rf-intro h1 {
+  font-size: 29px;
+  letter-spacing: -1px;
+  font-weight: 650;
+  margin-bottom: 4px;
+}
+.rf-intro p {
+  color: var(--rf-muted);
+}
+.rf-date {
+  text-align: right;
+  font-size: 12px;
+  color: var(--rf-muted);
+}
+.rf-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.rf-dashboard h2 {
+  font-size: 17px;
+  letter-spacing: -0.3px;
+  font-weight: 600;
+}
+.rf-dashboard h2 small {
+  font-size: 12px;
+  color: var(--rf-muted);
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-left: 5px;
+}
+.rf-pill {
+  border: 1px solid var(--rf-line);
+  border-radius: 6px;
+  padding: 4px 9px;
+  font-size: 11px;
+  color: var(--rf-muted);
+}
+.rf-card {
+  background: var(--rf-card);
+  border: 1px solid var(--rf-line);
+  border-radius: 12px;
+  min-width: 0;
+}
+.rf-dollars {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+.rf-dollar {
+  padding: 18px;
+}
+.rf-dollar h3 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.rf-value {
+  font-size: 27px;
+  letter-spacing: -0.8px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.rf-dollar .rf-value {
+  margin: 14px 0 2px;
+  white-space: nowrap;
+}
+.rf-small {
+  font-size: 12px;
+  color: var(--rf-muted);
+}
+.rf-buy {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--rf-muted);
+  border-top: 1px solid var(--rf-line);
+  margin-top: 12px;
+  padding-top: 11px;
+}
+.rf-buy b {
+  font-weight: 500;
+  color: var(--rf-text);
+}
+.rf-note {
+  font-size: 11px;
+  color: var(--rf-muted);
+  padding-top: 10px;
+}
+.rf-state {
+  padding: 22px;
+  color: var(--rf-muted);
+  font-size: 13px;
+}
+.rf-error {
+  color: var(--rf-down);
+}
+.rf-caucion {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 2fr;
+  gap: 24px;
+  align-items: center;
+  padding: 20px 24px;
+  margin: 16px 0 28px;
+  background: linear-gradient(110deg, #17283c, var(--rf-card) 60%);
+}
+.rf-rate .rf-value {
+  font-size: 31px;
+  color: var(--rf-blue);
+}
+.rf-stats {
+  display: flex;
+  justify-content: space-around;
+  border-left: 1px solid var(--rf-line);
+}
+.rf-stats b {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.rf-caucion > .rf-note {
+  grid-column: 1/-1;
+  padding: 0;
+}
+.rf-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.rf-panel {
+  padding: 22px 22px 12px;
+  height: 100%;
+}
+.rf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.rf-table th {
+  font-size: 10px;
+  letter-spacing: 0.7px;
+  font-weight: 500;
+  color: var(--rf-muted);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rf-line);
+}
+.rf-table td {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--rf-line);
+  font-size: 14px;
+}
+.rf-table tr:last-child td {
+  border: 0;
+}
+.rf-table :is(td, th) {
+  text-align: right;
+}
+.rf-table :is(td, th):first-child {
+  text-align: left;
+}
+.rf-table td:not(:first-child) {
+  white-space: nowrap;
+  padding-left: 9px;
+}
+.rf-instrument {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.rf-instrument b {
+  font-size: 14px;
+}
+.rf-instrument small {
+  display: block;
+  font-size: 11px;
+  color: var(--rf-muted);
+  max-width: 195px;
+  overflow-wrap: anywhere;
+}
+.rf-asset {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid #354057;
+  border-radius: 9px;
+  background: #1e293e;
+  color: #b2c8e2;
+  font-size: 10px;
+}
+.rf-change {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--rf-up);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rf-change.down {
+  color: var(--rf-down);
+}
+.rf-change.neutral {
+  color: var(--rf-muted);
+}
+.rf-table .rf-change {
+  min-width: 62px;
+  padding: 4px 7px;
+  border-radius: 5px;
+  background: #16362f;
+}
+.rf-table .rf-change.down {
+  background: #362332;
+}
+.rf-table .rf-change.neutral {
+  background: #263246;
+}
+.rf-tabs {
+  display: flex;
+  background: var(--rf-bg);
+  padding: 3px;
+  border-radius: 7px;
+}
+.rf-tabs button {
+  min-height: 40px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--rf-muted);
+  border-radius: 5px;
+}
+.rf-tabs button[aria-pressed='true'] {
+  background: #27354b;
+  color: var(--rf-text);
+}
+.rf-source {
+  font-size: 11px;
+  color: var(--rf-muted);
+  margin-top: 12px;
+}
+.rf-source summary {
+  cursor: pointer;
+  min-height: 32px;
+}
+.rf-source p {
+  padding: 8px 0;
+  line-height: 1.6;
+}
+.rf-crypto-section {
+  margin-top: 28px;
+}
+.rf-textbutton {
+  color: var(--rf-blue);
+  min-height: 44px;
+  font-size: 12px;
+  padding: 4px;
+}
+.rf-cryptos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.rf-crypto {
+  padding: 18px 18px 10px;
+}
+.rf-crypto-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.rf-crypto .rf-value {
+  font-size: 23px;
+  margin-top: 16px;
+  overflow-wrap: anywhere;
+}
+.rf-crypto .rf-instrument small {
+  font-size: 11px;
+}
+.rf-spark {
+  width: 100%;
+  height: 50px;
+  margin-top: 12px;
+}
+.rf-spark polyline {
+  stroke: var(--rf-blue);
+  stroke-width: 1.5;
+  fill: none;
+}
+.rf-editor {
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.rf-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.rf-chips button {
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 1px solid var(--rf-line);
+  border-radius: 8px;
+  color: var(--rf-text);
+}
+.rf-editor label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.rf-editor input {
+  width: 100%;
+  min-height: 44px;
+  background: var(--rf-bg);
+  border: 1px solid var(--rf-line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--rf-text);
+}
+.rf-results {
+  max-height: 240px;
+  overflow: auto;
+  margin-top: 8px;
+}
+.rf-results button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  text-align: left;
+  border-bottom: 1px solid var(--rf-line);
+  padding: 10px;
+}
+.rf-results button:hover {
+  background: #213149;
+}
+.rf-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 30px 0;
+}
+.rf-tool {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 21px;
+}
+.rf-tool:hover {
+  border-color: var(--rf-blue);
+}
+.rf-tool strong {
+  font-weight: 550;
+}
+.rf-tool p {
+  font-size: 12px;
+  color: var(--rf-muted);
+  margin-top: 2px;
+}
+.rf-tool-icon {
+  color: var(--rf-blue);
+  background: #21334b;
+  border-radius: 9px;
+  padding: 10px;
+  font-size: 20px;
+}
+.rf-arrow {
+  margin-left: auto;
+  color: var(--rf-blue);
+  font-size: 20px;
+}
+.rf-footer {
+  border-top: 1px solid var(--rf-line);
+  padding: 22px 0;
+  color: var(--rf-muted);
+  font-size: 11px;
+}
+.rf-footer .rf-wrap {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.rf-skip {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  background: var(--rf-card);
+  padding: 12px;
+  z-index: 100;
+}
+.rf-skip:focus {
+  top: 12px;
+}
+@media (max-width: 1100px) {
+  .rf-market {
+    display: none;
+  }
+  .rf-wrap {
+    padding: 0 24px;
+  }
+  .rf-grid {
+    gap: 16px;
+  }
+  .rf-panel {
+    padding: 18px 15px 10px;
+  }
+  .rf-dollar {
+    padding: 14px;
+  }
+  .rf-dollar .rf-value {
+    font-size: 24px;
+  }
+  .rf-cryptos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rf-asset {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .rf-wrap {
+    padding: 0 18px;
+  }
+  .rf-header .rf-wrap {
+    display: block;
+    padding-top: 18px;
+  }
+  .rf-brand {
+    font-size: 19px;
+  }
+  .rf-brand svg {
+    width: 32px;
+    height: 32px;
+  }
+  .rf-brand small {
+    font-size: 9px;
+  }
+  .rf-nav {
+    gap: 24px;
+    font-size: 12px;
+    margin-top: 14px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .rf-nav a {
+    padding: 10px 0 14px;
+    min-height: 44px;
+  }
+  .rf-intro {
+    display: block;
+    margin: 24px 0 22px;
+  }
+  .rf-intro h1 {
+    font-size: 26px;
+  }
+  .rf-intro p {
+    font-size: 13px;
+  }
+  .rf-date {
+    text-align: left;
+    font-size: 11px;
+    margin-top: 14px;
+  }
+  .rf-dashboard h2 {
+    font-size: 16px;
+  }
+  .rf-dashboard h2 small {
+    font-size: 11px;
+  }
+  .rf-section-head {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .rf-pill {
+    font-size: 11px;
+  }
+  .rf-dollars {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .rf-dollar {
+    padding: 15px;
+  }
+  .rf-dollar h3 {
+    font-size: 13px;
+  }
+  .rf-dollar .rf-value {
+    font-size: 27px;
+    margin-top: 10px;
+  }
+  .rf-dollar:last-child {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    column-gap: 12px;
+  }
+  .rf-dollar:last-child .rf-value {
+    margin: 0;
+    text-align: right;
+  }
+  .rf-dollar:last-child > .rf-small {
+    grid-column: 2;
+    text-align: right;
+  }
+  .rf-dollar:last-child .rf-buy {
+    grid-column: 1/-1;
+  }
+  .rf-caucion {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 18px;
+    margin-bottom: 24px;
+  }
+  .rf-rate {
+    text-align: right;
+  }
+  .rf-rate .rf-value {
+    font-size: 28px;
+  }
+  .rf-stats {
+    grid-column: 1/-1;
+    border: 0;
+    border-top: 1px solid var(--rf-line);
+    padding-top: 13px;
+    justify-content: space-between;
+  }
+  .rf-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .rf-panel {
+    padding: 17px 14px 10px;
+  }
+  .rf-table td {
+    font-size: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .rf-instrument small {
+    max-width: 140px;
+  }
+  .rf-table .rf-change {
+    font-size: 11px;
+    min-width: 55px;
+    padding: 4px;
+  }
+  .rf-crypto-section {
+    margin-top: 24px;
+  }
+  .rf-cryptos {
+    gap: 10px;
+  }
+  .rf-crypto {
+    padding: 14px 12px 8px;
+  }
+  .rf-crypto-top {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .rf-crypto .rf-value {
+    font-size: 20px;
+  }
+  .rf-crypto .rf-instrument b {
+    font-size: 13px;
+  }
+  .rf-crypto .rf-change {
+    font-size: 11px;
+  }
+  .rf-tools {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 24px 0;
+  }
+  .rf-tool {
+    padding: 15px;
+  }
+  .rf-footer .rf-wrap {
+    display: block;
+  }
+  .rf-footer span {
+    display: block;
+    margin-top: 6px;
+  }
+}
+@media (max-width: 360px) {
+  .rf-wrap {
+    padding: 0 12px;
+  }
+  .rf-panel {
+    padding: 14px 10px;
+  }
+  .rf-table td:not(:first-child) {
+    padding-left: 5px;
+  }
+  .rf-instrument small {
+    max-width: 110px;
+  }
+  .rf-dollar .rf-value {
+    font-size: 24px;
+  }
+  .rf-crypto .rf-value {
+    font-size: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rf-dashboard * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
