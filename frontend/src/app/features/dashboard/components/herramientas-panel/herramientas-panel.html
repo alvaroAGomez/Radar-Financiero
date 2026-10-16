@@ -1,64 +1,31 @@
-<div>
-  <h2 class="section-label flex items-center gap-2 mb-4">
-    <span class="material-symbols-outlined text-primary text-lg">construction</span>
-    Herramientas
-  </h2>
-
-  <!-- Web View -->
-  <div class="hidden md:grid grid-cols-1 gap-3">
-    @if (isLoadingConfig) {
-    <div class="data-card p-4 rounded-xl flex items-center justify-between">
-      <div class="h-4 bg-surface-bright rounded w-32 animate-pulse"></div>
-    </div>
-    <div class="data-card p-4 rounded-xl flex items-center justify-between">
-      <div class="h-4 bg-surface-bright rounded w-32 animate-pulse"></div>
-    </div>
-    } @else {
+<div class="rf-tools">
+  @if (isLoadingConfig) {
+    <p class="rf-card rf-state" role="status">Cargando herramientas…</p>
+  } @else {
     @if (botCaucionesUrl) {
-    <a [href]="botCaucionesUrl" target="_blank"
-      class="data-card p-4 rounded-xl flex items-center justify-between hover:translate-x-1 transition-transform tap-feedback">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-primary text-lg">smart_toy</span>
-        <p class="text-xs font-bold text-on-surface">Bot de Cauciones</p>
-      </div>
-      <span class="material-symbols-outlined text-outline text-sm">open_in_new</span>
-    </a>
+      <a [href]="botCaucionesUrl" target="_blank" rel="noopener noreferrer" class="rf-card rf-tool"
+        ><span class="rf-tool-icon" aria-hidden="true">↗</span>
+        <div>
+          <strong>Bot de cauciones</strong>
+          <p>Consultá tasas desde Telegram.</p>
+        </div>
+        <span class="rf-arrow" aria-hidden="true">↗</span
+        ><span class="sr-only">Abre Telegram en otra pestaña</span></a
+      >
     }
-
     @if (botDividendosUrl) {
-    <a [href]="botDividendosUrl" target="_blank"
-      class="data-card p-4 rounded-xl flex items-center justify-between hover:translate-x-1 transition-transform tap-feedback">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-secondary text-lg">calculate</span>
-        <p class="text-xs font-bold text-on-surface">Aviso de Dividendos</p>
-      </div>
-      <span class="material-symbols-outlined text-outline text-sm">open_in_new</span>
-    </a>
+      <a [href]="botDividendosUrl" target="_blank" rel="noopener noreferrer" class="rf-card rf-tool"
+        ><span class="rf-tool-icon" aria-hidden="true">◷</span>
+        <div>
+          <strong>Avisos de dividendos</strong>
+          <p>Seguí los próximos pagos en Telegram.</p>
+        </div>
+        <span class="rf-arrow" aria-hidden="true">↗</span
+        ><span class="sr-only">Abre Telegram en otra pestaña</span></a
+      >
     }
+    @if (!botCaucionesUrl && !botDividendosUrl) {
+      <p class="rf-small">Herramientas no disponibles por el momento.</p>
     }
-  </div>
-
-  <!-- Mobile View -->
-  <div class="grid md:hidden grid-cols-2 gap-3">
-    @if (isLoadingConfig) {
-    <div class="bg-surface-bright/50 p-3 rounded-xl h-[60px] animate-pulse"></div>
-    <div class="bg-surface-bright/50 p-3 rounded-xl h-[60px] animate-pulse"></div>
-    } @else {
-    @if (botCaucionesUrl) {
-    <a [href]="botCaucionesUrl" target="_blank"
-      class="flex items-center gap-3 bg-surface-bright/50 hover:bg-surface-bright p-3 rounded-xl transition-all tap-feedback">
-      <span class="material-symbols-outlined text-primary">smart_toy</span>
-      <span class="text-[11px] font-bold text-left leading-tight text-on-surface">Bot de<br>Cauciones</span>
-    </a>
-    }
-
-    @if (botDividendosUrl) {
-    <a [href]="botDividendosUrl" target="_blank"
-      class="flex items-center gap-3 bg-surface-bright/50 hover:bg-surface-bright p-3 rounded-xl transition-all tap-feedback">
-      <span class="material-symbols-outlined text-secondary">payments</span>
-      <span class="text-[11px] font-bold text-left leading-tight text-on-surface">Aviso de<br>Dividendos</span>
-    </a>
-    }
-    }
-  </div>
+  }
 </div>

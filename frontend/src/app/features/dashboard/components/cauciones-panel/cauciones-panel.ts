@@ -11,20 +11,25 @@ import { LoadingSkeleton } from '../../../../shared/components/loading-skeleton/
   styleUrl: './cauciones-panel.css',
 })
 export class CaucionesPanel {
-  private dataService   = inject(DashboardDataService);
-  readonly isLoading    = this.dataService.isLoading;
-  readonly cauciones    = this.dataService.cauciones;
+  private dataService = inject(DashboardDataService);
+  readonly isLoading = this.dataService.isLoading;
+  readonly cauciones = this.dataService.cauciones;
   readonly caucionError = this.dataService.caucionError;
-  readonly isMarketOpen   = this.dataService.isMarketOpen;
+  readonly isMarketOpen = this.dataService.isMarketOpen;
   readonly marketCachedAt = this.dataService.marketCachedAt;
 
   formatCachedAt(iso: string | null): string {
     if (!iso) return '';
-    return new Date(iso).toLocaleTimeString('es-AR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      timeZone: 'America/Argentina/Buenos_Aires',
-    });
+    return (
+      new Date(iso).toLocaleString('es-AR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'America/Argentina/Buenos_Aires',
+      }) + ' ART'
+    );
   }
 }

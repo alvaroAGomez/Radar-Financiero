@@ -1,119 +1,65 @@
-<div class="h-full flex flex-col">
-
-  <!-- Header con tooltip IOL -->
-  <h2 class="section-label flex items-center gap-2 mb-4">
-    <span class="material-symbols-outlined text-primary text-lg">public</span>
-    Monitor Global de ETFs
-    <!-- Tooltip IOL -->
-    <span class="iol-tooltip-wrapper ml-1 relative group inline-flex items-center">
-      <span
-        class="material-symbols-outlined text-outline/40 text-[14px] cursor-default select-none hover:text-outline/70 transition-colors"
-        style="font-variation-settings: 'FILL' 0; font-size: 14px;">
-        info
-      </span>
-      <div class="iol-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50
-                  w-72 px-3 py-2 rounded-lg shadow-lg pointer-events-none
-                  opacity-0 group-hover:opacity-100
-                  translate-y-1 group-hover:translate-y-0
-                  transition-all duration-200 ease-out">
-        <p class="text-[10px] leading-relaxed text-on-surface-variant text-left normal-case">
-          Cotizaciones en tiempo real provistas por la API de
-          <span class="font-bold text-primary">InvertirOnline (IOL)</span>.
-          Datos filtrados por volumen operativo local.
-        </p>
-      </div>
-    </span>
-      <!-- Icono: mercado cerrado (datos del último cierre) -->
-      @if (!isMarketOpen()) {
-      <span class="iol-tooltip-wrapper relative group inline-flex items-center ml-1">
-        <span
-          class="material-symbols-outlined text-amber-400 text-[14px] cursor-default select-none hover:text-amber-300 transition-colors"
-          style="font-variation-settings: 'FILL' 0; font-size: 14px;">
-          history
-        </span>
-        <div class="iol-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50
-                    w-48 px-3 py-2 rounded-lg shadow-lg pointer-events-none
-                    opacity-0 group-hover:opacity-100
-                    translate-y-1 group-hover:translate-y-0
-                    transition-all duration-200 ease-out">
-          <p class="text-[10px] leading-relaxed text-on-surface-variant text-center font-normal normal-case">
-            Datos al cierre del mercado @if (marketCachedAt()) { <br/> <span class="font-bold text-amber-400">{{ formatCachedAt(marketCachedAt()) }}</span> }
-          </p>
-        </div>
-      </span>
-      }
-    </h2>
-
-  <!-- Loading -->
+<div class="rf-card rf-panel">
+  <div class="rf-section-head">
+    <h2>ETFs vía CEDEARs</h2>
+    <span class="rf-pill">ARS</span>
+  </div>
   @if (isLoading() && !market()) {
-  <div class="data-card p-4 rounded-xl space-y-3">
-    <app-loading-skeleton [rows]="['60%', '80%', '50%', '70%', '60%']" />
-  </div>
+    <app-loading-skeleton [rows]="['90%', '80%', '90%', '80%', '90%']" />
+  } @else if (marketError() || !market()) {
+    <p class="rf-state rf-error" role="status">
+      No se pudieron obtener los ETFs. Se reintentará automáticamente.
+    </p>
+  } @else {
+    <table class="rf-table">
+      <caption class="sr-only">
+        Cotizaciones locales de ETFs vía CEDEARs en pesos argentinos
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Instrumento</th>
+          <th scope="col">Precio ARS</th>
+          <th scope="col">Var. diaria</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (etf of enrichedEtfs; track etf.ticker) {
+          <tr>
+            <td>
+              <div class="rf-instrument">
+                <span class="rf-asset" aria-hidden="true">{{ etf.ticker.slice(0, 2) }}</span>
+                <div>
+                  <b>{{ etf.ticker }}</b
+                  ><small>{{ etf.macro }}</small>
+                </div>
+              </div>
+            </td>
+            <td>{{ etf.live ? (etf.live.precio | currencyFormatter: 'ARS' : 0) : '—' }}</td>
+            <td>
+              @if (etf.live) {
+                <span
+                  class="rf-change"
+                  [class.down]="etf.live.variacion < 0"
+                  [class.neutral]="etf.live.variacion === 0"
+                  >{{ etf.live.variacion > 0 ? '+' : ''
+                  }}{{ etf.live.variacion | number: '1.1-1' }}%</span
+                >
+              } @else {
+                <span class="rf-small">Sin datos</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
   }
-
-  <!-- Error -->
-  @if (!isLoading() && (marketError() || !market())) {
-  <div class="data-card rounded-xl p-6 flex flex-col items-center justify-center gap-3 text-center min-h-[200px]">
-    <span class="material-symbols-outlined text-4xl text-outline/40">signal_disconnected</span>
-    <div>
-      <p class="text-sm font-bold text-on-surface-variant">Sin datos disponibles</p>
-      <p class="text-[11px] text-outline mt-1">No se pudo conectar con IOL. Se reintentará automáticamente.</p>
-    </div>
-  </div>
-  }
-
-  <!-- Data -->
-  @if (market()) {
-  <div class="data-card rounded-xl overflow-hidden flex-grow">
-
-    <!-- Table Header -->
-    <div class="grid grid-cols-12 px-4 py-2 border-b border-outline-variant/10 bg-surface-container/50">
-      <div class="col-span-5 text-[9px] font-bold uppercase tracking-widest text-on-surface">Instrumento</div>
-      <div class="col-span-4 text-[9px] font-bold uppercase tracking-widest text-on-surface">Macro</div>
-      <div class="col-span-3 text-[9px] font-bold uppercase tracking-widest text-on-surface text-right">Var. Hoy</div>
-    </div>
-
-    <!-- ETF Rows -->
-    <div class="divide-y divide-outline-variant/10">
-      @for (etf of enrichedEtfs; track etf.ticker) {
-      <div class="etf-row grid grid-cols-12 px-4 py-3 items-center transition-colors hover:bg-surface-container-low/60"
-        [class.market-open]="etf.live">
-
-        <!-- Instrument Info -->
-        <div class="col-span-5 flex items-center gap-2 min-w-0">
-          <span class="text-lg leading-none flex-shrink-0">{{ etf.icon }}</span>
-          <div class="min-w-0">
-            <p class="text-xs font-headline font-black text-on-surface">{{ etf.ticker }}</p>
-            <p class="text-[9px] text-outline truncate leading-tight">{{ etf.fullName }}</p>
-          </div>
-        </div>
-
-        <!-- Macro Description -->
-        <div class="col-span-4 min-w-0">
-          <p class="text-[9px] text-on-surface-variant truncate leading-tight">{{ etf.macro }}</p>
-          @if (etf.live) {
-          <p class="text-[8px] text-outline mt-0.5">
-            {{ etf.live.precio | currencyFormatter:'ARS':0 }}
-          </p>
-          }
-        </div>
-
-        <!-- Change Badge -->
-        <div class="col-span-3 flex justify-end">
-          @if (etf.live) {
-          <span
-            class="etf-change-badge text-[11px] font-headline font-black px-2 py-0.5 rounded-md min-w-[52px] text-center"
-            [class.positive]="etf.live.variacion >= 0" [class.negative]="etf.live.variacion < 0">
-            {{ etf.live.variacion >= 0 ? '+' : '' }}{{ etf.live.variacion | number:'1.1-1' }}%
-          </span>
-          } @else {
-          <span class="text-[10px] text-outline/40 italic">—</span>
-          }
-        </div>
-      </div>
+  <details class="rf-source">
+    <summary>Fuente y actualización</summary>
+    <p>
+      API de InvertirOnline (IOL). Precio local del CEDEAR en ARS.
+      @if (marketCachedAt()) {
+        {{ isMarketOpen() ? 'Datos de mercado' : 'Último cierre' }}:
+        {{ formatCachedAt(marketCachedAt()) }}
       }
-    </div>
-
-  </div>
-  }
+    </p>
+  </details>
 </div>

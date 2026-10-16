@@ -1,3 +1,4 @@
+@import './dashboard-theme.css';
 /* ============================================
    RADAR FINANCIERO — Global Styles
    The Sovereign Financial Experience
@@ -22,7 +23,7 @@
   }
 
   body {
-    background-color: #0b1326;
+    background-color: #0b1220;
     color: #dae2fd;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -206,7 +207,7 @@
 
 /* --- Ionic overrides (ensure dark theme consistency) --- */
 :root {
-  --ion-background-color: #0b1326;
+  --ion-background-color: #0b1220;
   --ion-text-color: #dae2fd;
   --ion-font-family: 'Inter', sans-serif;
   --ion-color-primary: #adc6ff;

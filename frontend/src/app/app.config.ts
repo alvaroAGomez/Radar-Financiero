@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  LOCALE_ID,
   provideBrowserGlobalErrorListeners,
   isDevMode,
 } from '@angular/core';
@@ -12,12 +13,10 @@ import { apiInterceptor } from './core/interceptors/api.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: LOCALE_ID, useValue: 'es-AR' },
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withViewTransitions()),
-    provideHttpClient(
-      withFetch(),
-      withInterceptors([apiInterceptor]),
-    ),
+    provideHttpClient(withFetch(), withInterceptors([apiInterceptor])),
     provideAnimations(),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
